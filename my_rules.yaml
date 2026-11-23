@@ -1,0 +1,134 @@
+# ==============================================================================
+# my_rules.yaml - 我的 ZJU-Rule 自定义网站 VPN 分流规则清单
+# ==============================================================================
+# 使用方法：
+#   1. 在下面对应的分类下取消注释或添加域名 / IP / 网址
+#   2. 运行: python apply_my_rules.py
+#   3. 提交并推送到你的 GitHub 分支，然后在 Subconverter 中使用 MyZJU.ini
+#
+# 支持的简写语法（会自动转换为标准 Clash / Subconverter 规则）：
+#   - example.com                -> DOMAIN-SUFFIX,example.com（推荐，含主域及子域）
+#   - *.example.com / .example.com -> DOMAIN-SUFFIX,example.com
+#   - =www.example.com           -> DOMAIN,www.example.com（仅精确匹配该主机名）
+#   - *keyword                   -> DOMAIN-KEYWORD,keyword（域名关键词匹配）
+#   - https://sub.example.com/a  -> DOMAIN-SUFFIX,sub.example.com（自动提取域名）
+#   - 1.2.3.4 或 1.2.3.0/24      -> IP-CIDR,1.2.3.4/32,no-resolve（IPv6 自动转 IP-CIDR6）
+#   - 原生规则语法                -> 原样保留，如 DOMAIN-SUFFIX,foo.com 或 IP-CIDR,10.0.0.0/8,no-resolve
+#
+# 注意：本文件中的规则会被置顶写入 Clash/config/MyZJU.ini，优先级高于上游规则！
+# ==============================================================================
+
+github:
+  # GitHub 用户名与仓库名（留空时会自动从 git remote origin 识别）
+  owner: ""
+  repo: ""
+  # 目标分支名（留空时会自动读取当前 git 分支，默认 my-rules）
+  branch: "my-rules"
+  # 规则注入方式：
+  #   inline（推荐）：直接将 ruleset=策略组,[]规则 写入 MyZJU.ini，无需额外拉取远程文件，开箱即用
+  #   url：在 MyZJU.ini 中引用你仓库里的 Clash/Custom/*.list 原始链接（需填好 owner/repo 或配置 origin）
+  ruleset_mode: "inline"
+  # 上游规则源模式：
+  #   upstream（推荐）：MyZJU.ini 中的上游规则仍指向 SubConv/ZJU-Rule，保持上游每日更新
+  #   self：将上游规则链接也改写为你自己仓库对应分支的链接
+  upstream_mode: "upstream"
+  # 可选：GitHub Raw 加速镜像前缀（例如 "https://gh-proxy.com/"），留空则直连 raw.githubusercontent.com
+  raw_mirror_prefix: ""
+
+rules:
+  # ----------------------------------------------------------------------------
+  # 常用策略（按先后顺序生效；若同一规则出现在多个分组，靠前的分组优先并会提示警告）
+  # ----------------------------------------------------------------------------
+
+  # 强制直连（不走代理）-> 🎯 全球直连
+  direct:
+    # - example-direct.com
+    # - =exact-direct.example.com
+
+  # 强制走代理（主节点选择）-> 🚀 节点选择
+  proxy:
+    # - example-proxy.com
+    # - https://docs.example.org/guide
+
+  # 浙大校内资源（直连或走 ZJU/RVPN 节点）-> ✔ ZJU内网
+  zju:
+    # - internal.zju.edu.cn
+
+  # 浙大学术资源（默认走节点选择，也可切换 ZJU/直连）-> 📃 ZJU More Scholar
+  scholar:
+    # - scholar-example.org
+
+  # AI 平台（ChatGPT / Claude / Gemini 等）-> 💬 Ai平台
+  ai:
+    # - example-ai.com
+
+  # 国外流媒体 / 媒体服务 -> 🌍 国外媒体
+  foreign_media:
+    # - example-media.tv
+
+  # 国内媒体 -> 🌏 国内媒体
+  china_media:
+    # - example-cn-media.cn
+
+  # 油管视频 -> 📹 油管视频
+  youtube:
+    # - example-yt.com
+
+  # 奈飞视频 -> 🎥 奈飞视频
+  netflix:
+    # - example-nf.com
+
+  # 哔哩哔哩 -> 📺 哔哩哔哩
+  bilibili:
+    # - example-bili.com
+
+  # 电报消息 -> 📲 电报消息
+  telegram:
+    # - example-tg.org
+
+  # 游戏平台 -> 🎮 游戏平台
+  games:
+    # - example-game.net
+
+  # 屏蔽 / 广告拦截 -> 🛑 广告拦截
+  reject:
+    # - ads.example.com
+
+  # ----------------------------------------------------------------------------
+  # 指定地区节点
+  # ----------------------------------------------------------------------------
+
+  # 香港节点 -> 🇭🇰 香港节点
+  region_hk:
+    # - hk-only.example.com
+
+  # 日本节点 -> 🇯🇵 日本节点
+  region_jp:
+    # - jp-only.example.com
+
+  # 美国节点 -> 🇺🇲 美国节点（注意与 ZJU.ini 一致，使用 🇺🇲 旗帜）
+  region_us:
+    # - us-only.example.com
+
+  # 台湾节点 -> 🇨🇳 台湾节点
+  region_tw:
+    # - tw-only.example.com
+
+  # 狮城节点 -> 🇸🇬 狮城节点
+  region_sg:
+    # - sg-only.example.com
+
+  # 韩国节点 -> 🇰🇷 韩国节点
+  region_kr:
+    # - kr-only.example.com
+
+# ------------------------------------------------------------------------------
+# 高级用法：直接指定 ZJU.ini 中的任意策略组完整名称（运行 python apply_my_rules.py --list-groups 查看）
+# 示例：
+# custom_groups:
+#   "Ⓜ️ 微软服务":
+#     - custom-ms.example.com
+#   "DIRECT":
+#     - raw-direct.example.com
+# ------------------------------------------------------------------------------
+custom_groups: {}
