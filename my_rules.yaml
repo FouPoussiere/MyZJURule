@@ -20,8 +20,8 @@
 
 github:
   # GitHub 用户名与仓库名（留空时会自动从 git remote origin 识别）
-  owner: ""
-  repo: ""
+  owner: "FouPoussiere"
+  repo: "MyZJURule"
   # 目标分支名（留空时会自动读取当前 git 分支，默认 my-rules）
   branch: "my-rules"
   # 规则注入方式：
